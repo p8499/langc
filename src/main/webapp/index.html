@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<title>Auto Code</title>
+		</head>
+	<body>
+		<p>
+			<button onclick="window.open('/code/download')">Download All</button>
+		</p>
+		<p>
+			<button onclick="openModel('user')">User</button>
+		</p>
+		<p>
+			<button onclick="openModel('role')">Role</button>
+		</p>
+		<p>
+			<button onclick="openModel('userRole')">Userrole</button>
+		</p>
+		<p>
+			<button onclick="openModel('authority')">Authority</button>
+		</p>
+		<p>
+			<button onclick="openModel('roleAuthority')">Roleauthority</button>
+		</p>
+		<p>
+			<button onclick="openModel('language')">Language</button>
+		</p>
+		<p>
+			<button onclick="openModel('languageParameter')">Languageparameter</button>
+			{id:"action",name:"操作",formatter:function(rawData){return rawData.lplsid;},decorator:function(cellData,rowId,rowIndex){return "<a target='view_window' href='../api/base/build?lang="+cellData+"'>重新編譯</a>";},width:"80px"}
+		</p>
+		<p>
+			<button onclick="openModel('chunk')">Chunk</button>
+		</p>
+		<p>
+			<button onclick="openModel('chunkCriteria')">Chunkcriteria</button>
+		</p>
+		<p>
+			<button onclick="openModel('category')">Category</button>
+		</p>
+		<p>
+			<button onclick="openModel('article')">Article</button>
+		</p>
+		<p>
+			<button onclick="openModel('sentence')">Sentence</button>
+		</p>
+		<p>
+			<button onclick="openModel('segment')">Segment</button>
+		</p>
+		<p>
+			<button onclick="openModel('segmentflow')">Segmentflow</button>
+		</p>
+		<p>
+			<button onclick="openModel('segmentvote')">Segmentvote</button>
+		</p>
+		<p>
+			<button onclick="openModel('tagging')">Tagging</button>
+		</p>
+		<p>
+			<button onclick="openModel('word')">Word</button>
+		</p>
+		<p>
+			<button onclick="openModel('wordflow')">Wordflow</button>
+		</p>
+		<p>
+			<button onclick="openModel('wordvote')">Wordvote</button>
+		</p>
+		<script src="/libdojo/dojo/dojo.js" data-dojo-config="async:true,parseOnLoad:true"></script>
+		<script>
+			require(["dojo/Deferred","dojo/json","dojo/promise/all","dojo/request/xhr","dojo/domReady!"],function(Deferred,json,all,xhr)
+			{	var language=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Language','maskAlias':'LanguageMask','listenerAlias':'LanguageListener','name':'語言','desc':['lsname'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'lsid','name':'語言編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'16','auto':false
+						},
+						'field':
+						[	{	'id':'lsname','name':'語言名稱','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'},
+							{	'id':'lsloc','name':'學術名','javaType':'String','dojoType':'dijit/form/TextBox','length':'128'},
+							{	'id':'lssort','name':'排序號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'LanguageMapper','view':'public.F1010','table':'public.F1010',
+						'unique':[],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'LanguageController','maskAlias':'LanguageMaskController','checkAlias':'LanguageCheckController','stub':'LanguageStub','base':'/api/base','path':'/api/language','path':'/api/language_mask','checkPath':'/api/language_check',
+						'auth':{'name':'lang','individual':false},'mapperBean':'languageMapper','listenerBean':'languageListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_language.html','js':'_part_language.js',
+						'sort':[{'id':'lssort','order':'asc'}]
+					}
+				};
+				var user=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'User','maskAlias':'UserMask','listenerAlias':'UserListener','name':'用戶','desc':['usid'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'usid','name':'用戶名','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','auto':false,'special':{'type':'owner'}
+						},
+						'field':
+						[	{	'id':'uspswd','name':'密碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'password','length':'16'}},
+							{	'id':'usname','name':'昵稱','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'},
+							{	'id':'usst','name':'狀態','javaType':'Integer','dojoType':'dijit/form/Select','length':'1','in':[{'value':-1,'desc':'Disabled'},{'value':0,'desc':'Enabled'}],'default':0},
+							{	'id':'uslsid','name':'語言編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'UserMapper','view':'public.F0301','table':'public.F0301',
+						'unique':[],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'UserController','maskAlias':'UserMaskController','checkAlias':'UserCheckController','stub':'UserStub','base':'/api/base','path':'/api/user','maskPath':'/api/user_mask','checkPath':'/api/user_check',
+						'auth':{'name':'user','individual':true},'mapperBean':'userMapper','listenerBean':'userListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_user.html','js':'_part_user.js',
+						'sort':[{'id':'usid','order':'asc'}]
+					}
+				};
+				var rel_language_user=
+				{	'alias':'rel_language_user',
+					'domesticModel':'user',
+					'domestic':['uslsid'],
+					'foreignModel':'language',
+					'foreign':['lsid']
+				};
+				
+				var role=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Role','maskAlias':'RoleMask','listenerAlias':'RoleListener','name':'角色','desc':['rlname'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'rlid','name':'角色編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','auto':false
+						},
+						'field':
+						[	{	'id':'rlname','name':'角色名稱','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'RoleMapper','view':'public.F0310','table':'public.F0310',
+						'unique':[],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'RoleController','maskAlias':'RoleMaskController','checkAlias':'RoleCheckController','stub':'RoleStub','base':'/api/base','path':'/api/role','maskPath':'/api/role_mask','checkPath':'/api/role_check',
+						'auth':{'name':'role','individual':false},'mapperBean':'roleMapper','listenerBean':'roleListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_role.html','js':'_part_role.js',
+						'sort':[{'id':'rlid','order':'asc'}]
+					}
+				};
+				var userRole=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Userrole','maskAlias':'UserroleMask','listenerAlias':'UserroleListener','name':'用戶--角色','desc':['rlid','rlname'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'urid','name':'編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'urusid','name':'用戶名','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'},
+							{	'id':'urrlid','name':'角色編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'UserroleMapper','view':'public.F0311','table':'public.F0311',
+						'unique':
+						[	['urusid','urrlid']
+						],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'UserroleController','maskAlias':'UserroleMaskController','checkAlias':'UserroleCheckController','stub':'UserroleStub','base':'/api/base','path':'/api/userrole','maskPath':'/api/userrole_mask','checkPath':'/api/userrole_check',
+						'auth':{'name':'usrl','individual':false},'mapperBean':'userroleMapper','listenerBean':'userroleListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_userrole.html','js':'_part_userrole.js',
+						'sort':[{'id':'urusid','order':'asc'},{'id':'urrlid','order':'asc'}]
+					}
+				};
+				var rel_user_userRole=
+				{	'alias':'rel_user_userRole',
+					'domesticModel':'userRole',
+					'domestic':['urusid'],
+					'foreignModel':'user',
+					'foreign':['usid']
+				};
+				var rel_role_userRole=
+				{	'alias':'rel_role_userRole',
+					'domesticModel':'userRole',
+					'domestic':['urrlid'],
+					'foreignModel':'role',
+					'foreign':['rlid']
+				};
+				var authority=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Authority','maskAlias':'AuthorityMask','listenerAlias':'AuthorityListener','name':'權限','desc':['auname'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'auid','name':'權限編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'16','auto':false
+						},
+						'field':
+						[	{	'id':'augrp','name':'分組','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'auname','name':'權限名稱','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'AuthorityMapper','view':'public.F0320','table':'public.F0320',
+						'unique':[],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'AuthorityController','maskAlias':'AuthorityMaskController','checkAlias':'AuthorityCheckController','stub':'AuthorityStub','base':'/api/base','path':'/api/authority','maskPath':'/api/authority_mask','checkPath':'/api/authority_check',
+						'auth':{'name':'auth','individual':false},'mapperBean':'authorityMapper','listenerBean':'authorityListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_authority.html','js':'_part_authority.js',
+						'sort':[{'id':'augrp','order':'asc'},{'id':'auid','order':'asc'}]
+					}
+				};
+				var roleAuthority=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Roleauthority','maskAlias':'RoleauthorityMask','listenerAlias':'RoleauthorityListener','name':'角色--權限','desc':['rarlid','raauid'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'raid','name':'編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'rarlid','name':'角色編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'},
+							{	'id':'raauid','name':'權限編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'RoleauthorityMapper','view':'public.F0321','table':'public.F0321',
+						'unique':
+						[	['rarlid','raauid']
+						],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'RoleauthorityController','maskAlias':'RoleauthorityMaskController','checkAlias':'RoleauthorityCheckController','stub':'RoleauthorityStub','base':'/api/base','path':'/api/roleauthority','maskPath':'/api/roleauthority_mask','checkPath':'/api/roleauthority_check',
+						'auth':{'name':'rlau','individual':false},'mapperBean':'roleauthorityMapper','listenerBean':'roleauthorityListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_roleauthority.html','js':'_part_roleauthority.js',
+						'sort':[{'id':'rarlid','order':'asc'},{'id':'raauid','order':'asc'}]
+					}
+				};
+				var rel_authority_roleAuthority=
+				{	'alias':'rel_authority_roleAuthority',
+					'domesticModel':'roleAuthority',
+					'domestic':['raauid'],
+					'foreignModel':'authority',
+					'foreign':['auid']
+				};
+				var rel_role_roleAuthority=
+				{	'alias':'rel_role_roleAuthority',
+					'domesticModel':'roleAuthority',
+					'domestic':['rarlid'],
+					'foreignModel':'role',
+					'foreign':['rlid']
+				};
+				var chunk=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Chunk','maskAlias':'ChunkMask','listenerAlias':'ChunkListener','name':'組合','desc':['cpsi'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'cpid','name':'組合編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'cplsid','name':'語言編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'},
+							{	'id':'cpsi','name':'子項號','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'},
+							{	'id':'cptg','name':'標記','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'},
+							{	'id':'cpft','name':'特徵','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'},
+							{	'id':'cpsort','name':'排序號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'ChunkMapper','view':'public.F1020','table':'public.F1020',
+						'unique':[],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'ChunkController','maskAlias':'ChunkMaskController','checkAlias':'ChunkCheckController','stub':'ChunkStub','base':'/api/base','path':'/api/chunk','maskPath':'/api/chunk_mask','checkPath':'/api/chunk_check',
+						'auth':{'name':'chnk','individual':false},'mapperBean':'chunkMapper','listenerBean':'chunkListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_chunk.html','js':'_part_chunk.js',
+						'sort':[{'id':'cplsid','order':'asc'},{'id':'cpsi','order':'asc'}]
+					}
+				};
+				var rel_language_chunk=
+				{	'alias':'rel_language_chunk',
+					'domesticModel':'chunk',
+					'domestic':['cplsid'],
+					'foreignModel':'language',
+					'foreign':['lsid']
+				};
+				var chunkCriteria=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Chunkcriteria','maskAlias':'ChunkcriteriaMask','listenerAlias':'ChunkcrieriaListener','name':'組合條件','desc':['cctk','cctg'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'ccid','name':'條件編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'cccpid','name':'組合編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'ccsi','name':'子項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','special':{'type':'next','scope':['cccpid'],'step':1}},
+							{	'id':'cctk','name':'採樣','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'},
+							{	'id':'cctg','name':'標記','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'ChunkcriteriaMapper','view':'public.F1021','table':'public.F1021',
+						'unique':[],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'ChunkcriteriaController','maskAlias':'ChunkcriteriaMaskController','checkAlias':'ChunkcriteriaCheckController','stub':'ChunkcriteriaStub','base':'/api/base','path':'/api/chunkcriteria','maskPath':'/api/chunkcriteria_mask','checkPath':'/api/chunkcriteria_check',
+						'auth':{'name':'ckct','individual':false},'mapperBean':'chunkcriteriaMapper','listenerBean':'chunkcriteriaListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_chunkcriteria.html','js':'_part_chunkcriteria.js',
+						'sort':[{'id':'cccpid','order':'asc'},{'id':'ccsi','order':'asc'}]
+					}
+				};
+				var rel_chunk_chunkCriteria=
+				{	'alias':'rel_chunk_chunkCriteria',
+					'domesticModel':'chunkCriteria',
+					'domestic':['cccpid'],
+					'foreignModel':'chunk',
+					'foreign':['cpid']
+				};
+				var languageParameter=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Languageparameter','maskAlias':'LanguageparameterMask','listenerAlias':'LanguageparameterListener','name':'語言參數','desc':['lplsid'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'lplsid','name':'語言編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'16','auto':false
+						},
+						'field':
+						[	{	'id':'lpsgng','name':'MaxNGram','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'lpsgch','name':'NumChars','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'lpsglf','name':'Lambda','javaType':'Double','dojoType':'dijit/form/NumberTextBox','length':'4','scale':'1'},
+							{	'id':'lpsgcw','name':'ContiWeight','javaType':'Double','dojoType':'dijit/form/NumberTextBox','length':'4','scale':'1'},
+							{	'id':'lpsgbw','name':'BreakWeight','javaType':'Double','dojoType':'dijit/form/NumberTextBox','length':'4','scale':'1'},
+							{	'id':'lpsgnb','name':'MaxNBest','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'lpsgft','name':'分詞訓練','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'},
+							{	'id':'lpsgfc','name':'分詞編譯','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'},
+							{	'id':'lppong','name':'NGram','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'lppoch','name':'NumChars','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'lppolf','name':'Lambda','javaType':'Double','dojoType':'dijit/form/NumberTextBox','length':'4','scale':'1'},
+							{	'id':'lppoft','name':'POS訓練','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'},
+							{	'id':'lppofc','name':'POS編譯','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'},
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'LanguageparameterMapper','view':'public.F9410','table':'public.F9410',
+						'unique':[],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'LanguageparameterController','maskAlias':'LanguageparameterMaskController','checkAlias':'LanguageparameterCheckController','stub':'LanguageparameterStub','base':'/api/base','path':'/api/languageparameter','maskPath':'/api/languageparameter_mask','checkPath':'/api/languageparameter_check',
+						'auth':{'name':'lang','individual':false},'mapperBean':'languageparameterMapper','listenerBean':'languageparameterListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_languageparameter.html','js':'_part_languageparameter.js',
+						'sort':[{'id':'lplsid','order':'asc'}]
+					}
+				};
+				var rel_language_languageParameter=
+				{	'alias':'rel_language_languageParameter',
+					'domesticModel':'languageParameter',
+					'domestic':['lplsid'],
+					'foreignModel':'language',
+					'foreign':['lsid']
+				};
+				var category=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Category','maskAlias':'CategoryMask','listenerAlias':'CategoryListener','name':'分類','desc':['cgname'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'cgid','name':'分類編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'cglsid','name':'語言編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'},
+							{	'id':'cgsi','name':'子項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'cgpsi','name':'父項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'cgname','name':'分類名稱','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'CategoryMapper','view':'public.F1030','table':'public.F1030',
+						'unique':
+						[	['cglsid','cgsi']
+						],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'CategoryController','maskAlias':'CategoryMaskController','checkAlias':'CategoryCheckController','stub':'CategoryStub','base':'/api/base','path':'/api/category','maskPath':'/api/category_mask','checkPath':'/api/category_check',
+						'auth':{'name':'cate','individual':false},'mapperBean':'categoryMapper','listenerBean':'categoryListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_category.html','js':'_part_category.js',
+						'sort':[{'id':'cglsid','order':'asc'},{'id':'cgpsi','order':'asc'},{'id':'cgsi','order':'asc'}]
+					}
+				};
+				var rel_language_category=
+				{	'alias':'rel_language_category',
+					'domesticModel':'category',
+					'domestic':['cglsid'],
+					'foreignModel':'language',
+					'foreign':['lsid']
+				};
+				var article=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Article','maskAlias':'ArticleMask','listenerAlias':'ArticleListener','name':'文章','desc':['atname'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'atid','name':'文章編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'atcgid','name':'分類編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'atsi','name':'子項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','special':{'type':'next','scope':['atcgid'],'step':1}},
+							{	'id':'atname','name':'文章名稱','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'},
+							{	'id':'atusid','name':'擁有者','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'owner'}},
+							{	'id':'atupdd','name':'更新日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'updated'}},
+							{	'id':'atupdt','name':'更新辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'updated'}},
+							{	'id':'atcgname','name':':分類名稱','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'cache'}},
+							{	'id':'atcsa','name':':A類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'cache'}},
+							{	'id':'atcsb','name':':B類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'cache'}},
+							{	'id':'atcsc','name':':C類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'cache'}},
+							{	'id':'atcsd','name':':D類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'cache'}},
+							{	'id':'atcse','name':':E類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'cache'}},
+							{	'id':'atcsf','name':':F類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'cache'}}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'ArticleMapper','view':'public.F1110','table':'public.F1110',
+						'unique':
+						[	['atcgid','atsi']
+						],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'ArticleController','maskAlias':'ArticleMaskController','checkAlias':'ArticleCheckController','stub':'ArticleStub','base':'/api/base','path':'/api/article','maskPath':'/api/article_mask','checkPath':'/api/article_check',
+						'auth':{'name':'artc','individual':true},'mapperBean':'articleMapper','listenerBean':'articleListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_article.html','js':'_part_article.js',
+						'sort':[{'id':'atcgid','order':'asc'},{'id':'atsi','order':'asc'}]
+					}
+				};
+				var rel_category_article=
+				{	'alias':'rel_category_article',
+					'domesticModel':'article',
+					'domestic':['atcgid'],
+					'foreignModel':'category',
+					'foreign':['cgid']
+				};
+				var rel_user_article=
+				{	'alias':'rel_user_article',
+					'domesticModel':'article',
+					'domestic':['atusid'],
+					'foreignModel':'user',
+					'foreign':['usid']
+				};
+				var sentence=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Sentence','maskAlias':'SentenceMask','listenerAlias':'SentenceListener','name':'文句','desc':['ascont'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'asid','name':'文句編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'asatid','name':'文章編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'assi','name':'子項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','special':{'type':'next','scope':['asatid'],'step':10}},
+							{	'id':'ascont','name':'內容','javaType':'String','dojoType':'dijit/form/Textarea','length':'128'},
+							{	'id':'asst','name':'狀態','javaType':'Integer','dojoType':'dijit/form/Select','length':'1','in':[{'value':-1,'desc':'Disabled'},{'value':0,'desc':'Enabled'}],'default':0},
+							{	'id':'asusid','name':'擁有者','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'owner'}},
+							{	'id':'asupdd','name':'更新日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'updated'}},
+							{	'id':'asupdt','name':'更新辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'updated'}}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'SentenceMapper','view':'public.F1120','table':'public.F1120',
+						'unique':
+						[	['asatid','assi']
+						],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'SentenceController','maskAlias':'SentenceMaskController','checkAlias':'SentenceCheckController','stub':'SentenceStub','base':'/api/base','path':'/api/sentence','maskPath':'/api/sentence_mask','checkPath':'/api/sentence_check',
+						'auth':{'name':'sent','individual':true},'mapperBean':'sentenceMapper','listenerBean':'sentenceListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_sentence.html','js':'_part_sentence.js',
+						'sort':[{'id':'asatid','order':'asc'},{'id':'assi','order':'asc'}]
+					}
+				};
+				var rel_article_sentence=
+				{	'alias':'rel_article_sentence',
+					'domesticModel':'sentence',
+					'domestic':['asatid'],
+					'foreignModel':'article',
+					'foreign':['atid']
+				};
+				var rel_user_sentence=
+				{	'alias':'rel_user_sentence',
+					'domesticModel':'sentence',
+					'domestic':['asusid'],
+					'foreignModel':'user',
+					'foreign':['usid']
+				};
+				var segment=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Segment','maskAlias':'SegmentMask','listenerAlias':'SegmentListener','name':'分詞','desc':['trcont'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'trasid','name':'文句編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':false
+						},
+						'field':
+						[	{	'id':'trpi','name':'拼音聲調','javaType':'String','dojoType':'dijit/form/Textarea','length':'1024'},
+						 	{	'id':'trhz','name':'漢字','javaType':'String','dojoType':'dijit/form/Textarea','length':'128'},
+							{	'id':'trst','name':'狀態','javaType':'Integer','dojoType':'dijit/form/Select','length':'1','in':[{'value':-1,'desc':'Disabled'},{'value':0,'desc':'Enabled'}],'default':0},
+							{	'id':'trusid','name':'擁有者','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'owner'}},
+							{	'id':'trupdd','name':'更新日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'updated'}},
+							{	'id':'trupdt','name':'更新辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'updated'}}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'SegmentMapper','view':'public.F1130','table':'public.F1130',
+						'unique':[],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'SegmentController','maskAlias':'SegmentMaskController','checkAlias':'SegmentCheckController','stub':'SegmentStub','base':'/api/base','path':'/api/segment','maskPath':'/api/segment_mask','checkPath':'/api/segment_check',
+						'auth':{'name':'sgmt','individual':true},'mapperBean':'segmentMapper','listenerBean':'segmentListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_segment.html','js':'_part_segment.js',
+						'sort':[{'id':'trasid','order':'asc'}]
+					}
+				};
+				var rel_sentence_segment=
+				{	'alias':'rel_sentence_segment',
+					'domesticModel':'segment',
+					'domestic':['trasid'],
+					'foreignModel':'sentence',
+					'foreign':['asid']
+				};
+				var rel_user_segment=
+				{	'alias':'rel_user_segment',
+					'domesticModel':'segment',
+					'domestic':['trusid'],
+					'foreignModel':'user',
+					'foreign':['usid']
+				};
+				var segmentflow=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Segmentflow','maskAlias':'SegmentflowMask','listenerAlias':'SegmentflowListener','name':'分詞線程','desc':['taasid','tasi'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'taid','name':'線程編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'taasid','name':'文句編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'tasi','name':'子項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','special':{'type':'next','scope':['taasid'],'step':1}},
+							{	'id':'tapi','name':'拼音聲調','javaType':'String','dojoType':'dijit/form/Textarea','length':'1024'},
+						 	{	'id':'tahz','name':'漢字','javaType':'String','dojoType':'dijit/form/Textarea','length':'128'},
+							{	'id':'tast','name':'狀態','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'1','in':[{'value':1,'desc':'Voting'},{'value':2,'desc':'Passed'},{'value':3,'desc':'Denied'}],'default':1},
+							{	'id':'tausid','name':'擁有者','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'owner'}},
+							{	'id':'tacrdd','name':'創建日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'created'}},
+							{	'id':'tacrdt','name':'創建辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'created'}},
+							{	'id':'taupdd','name':'更新日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'updated'}},
+							{	'id':'taupdt','name':'更新辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'updated'}}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'SegmentflowMapper','view':'public.F1131','table':'public.F1131',
+						'unique':
+						[	['taasid','tasi']
+						],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'SegmentflowController','maskAlias':'SegmentflowMaskController','checkAlias':'SegmentflowCheckController','stub':'SegmentflowStub','base':'/api/base','path':'/api/segmentflow','maskPath':'/api/segmentflow_mask','checkPath':'/api/segmentflow_check',
+						'auth':{'name':'sgfl','individual':true},'mapperBean':'SegmentflowMapper','listenerBean':'segmentflowListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_segmentflow.html','js':'_part_segmentflow.js',
+						'sort':[{'id':'taasid','order':'asc'},{'id':'tasi','order':'asc'}]
+					}
+				};
+				var rel_sentence_segmentflow=
+				{	'alias':'rel_sentence_segmentflow',
+					'domesticModel':'segmentflow',
+					'domestic':['taasid'],
+					'foreignModel':'sentence',
+					'foreign':['asid']
+				};
+				var rel_user_segmentflow=
+				{	'alias':'rel_user_segmentflow',
+					'domesticModel':'segmentflow',
+					'domestic':['tausid'],
+					'foreignModel':'user',
+					'foreign':['usid']
+				};
+				var segmentvote=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Segmentvote','maskAlias':'SegmentvoteMask','listenerAlias':'SegmentvoteListener','name':'分詞線程投票','desc':['wvwaid','wvusid'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'tvid','name':'投票編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'tvtaid','name':'線程編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'tvsi','name':'子項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','special':{'type':'next','scope':['tvtaid'],'step':1}},
+							{	'id':'tvusid','name':'擁有者','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'owner'}},
+							{	'id':'tvpo','name':'能量','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'2'},
+							{	'id':'taupdd','name':'更新日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'updated'}},
+							{	'id':'taupdt','name':'更新辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'updated'}}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'SegmentvoteMapper','view':'public.F1132','table':'public.F1132',
+						'unique':
+						[	['tvtaid','tvsi'],
+							['tvtaid','tvusid'],
+						],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'SegmentvoteController','maskAlias':'SegmentvoteMaskController','checkAlias':'SegmentvoteCheckController','stub':'SegmentvoteStub','base':'/api/base','path':'/api/segmentvote','maskPath':'/api/segmentvote_mask','checkPath':'/api/segmentvote_check',
+						'auth':{'name':'sgvt','individual':true},'mapperBean':'SegmentvoteMapper','listenerBean':'segmentvoteListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_segmentvote.html','js':'_part_segmentvote.js',
+						'sort':[{'id':'tvtaid','order':'asc'},{'id':'tvsi','order':'asc'}]
+					}
+				};
+				var rel_segmentflow_segmentvote=
+				{	'alias':'rel_segmentflow_segmentvote',
+					'domesticModel':'segmentvote',
+					'domestic':['tvtaid'],
+					'foreignModel':'segmentflow',
+					'foreign':['taid']
+				};
+				var rel_user_segmentvote=
+				{	'alias':'rel_user_segmentvote',
+					'domesticModel':'segmentvote',
+					'domestic':['tvusid'],
+					'foreignModel':'user',
+					'foreign':['usid']
+				};
+				var tagging=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Tagging','maskAlias':'TaggingMask','listenerAlias':'TaggingListener','name':'標註','desc':['tgcont'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'tgasid','name':'文句編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':false
+						},
+						'field':
+						[	{	'id':'tgcont','name':'內容','javaType':'String','dojoType':'dijit/form/Textarea','length':'128'},
+							{	'id':'tgst','name':'狀態','javaType':'Integer','dojoType':'dijit/form/Select','length':'1','in':[{'value':-1,'desc':'Disabled'},{'value':0,'desc':'Enabled'}],'default':0},
+							{	'id':'tgusid','name':'擁有者','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'owner'}},
+							{	'id':'tgupdd','name':'更新日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'updated'}},
+							{	'id':'tgupdt','name':'更新辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'updated'}}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'TaggingMapper','view':'public.F1140','table':'public.F1140',
+						'unique':[],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'TaggingController','maskAlias':'TaggingMaskController','checkAlias':'TaggingCheckController','stub':'TaggingStub','base':'/api/base','path':'/api/tagging','maskPath':'/api/tagging_mask','checkPath':'/api/tagging_check',
+						'auth':{'name':'post','individual':true},'mapperBean':'taggingMapper','listenerBean':'taggingListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_tagging.html','js':'_part_tagging.js',
+						'sort':[{'id':'tgasid','order':'asc'}]
+					}
+				};
+				var rel_sentence_tagging=
+				{	'alias':'rel_sentence_tagging',
+					'domesticModel':'tagging',
+					'domestic':['tgasid'],
+					'foreignModel':'sentence',
+					'foreign':['asid']
+				};
+				var rel_user_tagging=
+				{	'alias':'rel_user_tagging',
+					'domesticModel':'tagging',
+					'domestic':['tgusid'],
+					'foreignModel':'user',
+					'foreign':['usid']
+				};
+				var pronounce=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Pronounce','maskAlias':'PronounceMask','listenerAlias':'PronounceListener','name':'字音','desc':['pnct'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'pnid','name':'字音編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'pnlsid','name':'語言編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'},
+							{	'id':'pnct','name':'字','javaType':'String','dojoType':'dijit/form/TextBox','length':'1'},
+							{	'id':'pnpi','name':'拼音','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'},
+							{	'id':'pntn','name':'聲調','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'1'},
+							{	'id':'pnco','name':'聲母','javaType':'String','dojoType':'dijit/form/TextBox','length':'8'},
+							{	'id':'pnvo','name':'韻母','javaType':'String','dojoType':'dijit/form/TextBox','length':'8'},
+							{	'id':'pncl','name':'類別','javaType':'String','dojoType':'dijit/form/TextBox','length':'4'},
+							{	'id':'pnrm','name':'備註','javaType':'String','dojoType':'dijit/form/TextBox','length':'4'}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'PronounceMapper','view':'public.F1011','table':'public.F1011',
+						'unique':[],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'PronounceController','maskAlias':'PronounceMaskController','checkAlias':'PronounceCheckController','stub':'PronounceStub','base':'/api/base','path':'/api/pronounce','maskPath':'/api/pronounce_mask','checkPath':'/api/pronounce_check',
+						'auth':{'name':'pron','individual':false},'mapperBean':'pronounceMapper','listenerBean':'pronounceListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_pronounce.html','js':'_part_pronounce.js',
+						'sort':[{'id':'pnlsid','order':'asc'},{'id':'pnpi','order':'asc'},{'id':'pntn','order':'asc'},{'id':'pnid','order':'asc'}]
+					}
+				};
+				var rel_language_pronounce=
+				{	'alias':'rel_language_pronounce',
+					'domesticModel':'pronounce',
+					'domestic':['pnlsid'],
+					'foreignModel':'language',
+					'foreign':['lsid']
+				};
+				var word=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Word','maskAlias':'WordMask','listenerAlias':'WordListener','name':'詞音','desc':['woct'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'woid','name':'詞音編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'wolsid','name':'語言編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'},
+							{	'id':'woct','name':'字','javaType':'String','dojoType':'dijit/form/TextBox','length':'8'},
+							{	'id':'wopt','name':'拼音聲調','javaType':'String','dojoType':'dijit/form/TextBox','length':'64'},
+							{	'id':'wocl','name':'類別','javaType':'String','dojoType':'dijit/form/TextBox','length':'4'},
+							{	'id':'wost','name':'狀態','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'1','in':[{'value':-1,'desc':'Disabled'},{'value':0,'desc':'Enabled'}],'default':0},
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'WordMapper','view':'public.F1040','table':'public.F1040',
+						'unique':
+						[	['wolsid','woct','wopt']
+						],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'WordController','maskAlias':'WordMaskController','checkAlias':'WordCheckController','stub':'WordStub','base':'/api/base','path':'/api/word','maskPath':'/api/word_mask','checkPath':'/api/word_check',
+						'auth':{'name':'word','individual':false},'mapperBean':'wordMapper','listenerBean':'wordListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_word.html','js':'_part_word.js',
+						'sort':[{'id':'wolsid','order':'asc'},{'id':'wopt','order':'asc'},{'id':'woid','order':'asc'}]
+					}
+				};
+				var rel_language_word=
+				{	'alias':'rel_language_word',
+					'domesticModel':'word',
+					'domestic':['wolsid'],
+					'foreignModel':'language',
+					'foreign':['lsid']
+				};
+				var wordflow=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Wordflow','maskAlias':'WordflowMask','listenerAlias':'WordflowListener','name':'詞音線程','desc':['wawoid','wasi'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'waid','name':'線程編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'wawoid','name':'詞音編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'wasi','name':'子項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','special':{'type':'next','scope':['wawoid'],'step':1}},
+							{	'id':'wapt','name':'拼音聲調','javaType':'String','dojoType':'dijit/form/TextBox','length':'64'},
+							{	'id':'wast','name':'狀態','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'1','in':[{'value':1,'desc':'Voting'},{'value':2,'desc':'Passed'},{'value':3,'desc':'Denied'}],'default':1},
+							{	'id':'wausid','name':'擁有者','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'owner'}},
+							{	'id':'wacrdd','name':'創建日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'created'}},
+							{	'id':'wacrdt','name':'創建辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'created'}},
+							{	'id':'waupdd','name':'更新日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'updated'}},
+							{	'id':'waupdt','name':'更新辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'updated'}}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'WordflowMapper','view':'public.F1041','table':'public.F1041',
+						'unique':
+						[	['wawoid','wasi']
+						],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'WordflowController','maskAlias':'WordflowMaskController','checkAlias':'WordflowCheckController','stub':'WordflowStub','base':'/api/base','path':'/api/wordflow','maskPath':'/api/wordflow_mask','checkPath':'/api/wordflow_check',
+						'auth':{'name':'wdfl','individual':true},'mapperBean':'wordflowMapper','listenerBean':'wordflowListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_wordflow.html','js':'_part_wordflow.js',
+						'sort':[{'id':'wawoid','order':'asc'},{'id':'wasi','order':'asc'}]
+					}
+				};
+				var rel_word_wordflow=
+				{	'alias':'rel_word_wordflow',
+					'domesticModel':'wordflow',
+					'domestic':['wawoid'],
+					'foreignModel':'word',
+					'foreign':['woid']
+				};
+				var rel_user_wordflow=
+				{	'alias':'rel_user_wordflow',
+					'domesticModel':'wordflow',
+					'domestic':['wausid'],
+					'foreignModel':'user',
+					'foreign':['usid']
+				};
+				var wordvote=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Wordvote','maskAlias':'WordvoteMask','listenerAlias':'WordvoteListener','name':'詞音線程投票','desc':['wvwaid','wvusid'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'wvid','name':'投票編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'wvwaid','name':'線程編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'wvsi','name':'子項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','special':{'type':'next','scope':['wvwaid'],'step':1}},
+							{	'id':'wvusid','name':'擁有者','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'owner'}},
+							{	'id':'wvpo','name':'能量','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'2'},
+							{	'id':'wvupdd','name':'更新日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'updated'}},
+							{	'id':'wvupdt','name':'更新辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'updated'}}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'WordvoteMapper','view':'public.F1042','table':'public.F1042',
+						'unique':
+						[	['wvwaid','wvsi'],
+							['wvwaid','wvusid'],
+						],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'WordvoteController','maskAlias':'WordvoteMaskController','checkAlias':'WordvoteCheckController','stub':'WordvoteStub','base':'/api/base','path':'/api/wordvote','maskPath':'/api/wordvote_mask','checkPath':'/api/wordvote_check',
+						'auth':{'name':'wdvt','individual':true},'mapperBean':'wordvoteMapper','listenerBean':'wordvoteListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_wordvote.html','js':'_part_wordvote.js',
+						'sort':[{'id':'wvwaid','order':'asc'},{'id':'wvsi','order':'asc'}]
+					}
+				};
+				var rel_wordflow_wordvote=
+				{	'alias':'rel_wordflow_wordvote',
+					'domesticModel':'wordvote',
+					'domestic':['wvwaid'],
+					'foreignModel':'wordflow',
+					'foreign':['waid']
+				};
+				var rel_user_wordvote=
+				{	'alias':'rel_user_wordvote',
+					'domesticModel':'wordvote',
+					'domestic':['wvusid'],
+					'foreignModel':'user',
+					'foreign':['usid']
+				};
+				
+				
+				xhr("/code/clr.jsp").then(function(){
+				xhr("/code/add.jsp?name=language&model="+json.stringify(language));}).then(function(){
+				xhr("/code/add.jsp?name=user&model="+json.stringify(user));}).then(function(){
+				xhr("/code/add.jsp?name=role&model="+json.stringify(role));}).then(function(){
+				xhr("/code/add.jsp?name=user&model="+json.stringify(user));}).then(function(){
+				xhr("/code/add.jsp?name=userRole&model="+json.stringify(userRole));}).then(function(){
+				xhr("/code/add.jsp?name=authority&model="+json.stringify(authority));}).then(function(){
+				xhr("/code/add.jsp?name=roleAuthority&model="+json.stringify(roleAuthority));}).then(function(){
+				xhr("/code/add.jsp?name=chunk&model="+json.stringify(chunk));}).then(function(){
+				xhr("/code/add.jsp?name=chunkCriteria&model="+json.stringify(chunkCriteria));}).then(function(){
+				xhr("/code/add.jsp?name=category&model="+json.stringify(category));}).then(function(){
+				xhr("/code/add.jsp?name=article&model="+json.stringify(article));}).then(function(){
+				xhr("/code/add.jsp?name=sentence&model="+json.stringify(sentence));}).then(function(){
+				xhr("/code/add.jsp?name=segment&model="+json.stringify(segment));}).then(function(){
+				xhr("/code/add.jsp?name=segmentflow&model="+json.stringify(segmentflow));}).then(function(){
+				xhr("/code/add.jsp?name=segmentvote&model="+json.stringify(segmentvote));}).then(function(){
+				xhr("/code/add.jsp?name=languageParameter&model="+json.stringify(languageParameter));}).then(function(){
+				xhr("/code/add.jsp?name=tagging&model="+json.stringify(tagging));}).then(function(){
+				xhr("/code/add.jsp?name=pronounce&model="+json.stringify(pronounce));}).then(function(){
+				xhr("/code/add.jsp?name=word&model="+json.stringify(word));}).then(function(){
+				xhr("/code/add.jsp?name=wordflow&model="+json.stringify(wordflow));}).then(function(){
+				xhr("/code/add.jsp?name=wordvote&model="+json.stringify(wordvote));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_language_user));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_user_userRole));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_role_userRole));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_authority_roleAuthority));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_role_roleAuthority));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_language_chunk));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_chunk_chunkCriteria));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_language_languageParameter));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_language_category));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_category_article));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_user_article));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_article_sentence));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_user_sentence));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_sentence_segment));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_user_segment));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_sentence_segmentflow));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_user_segmentflow));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_segmentflow_segmentvote));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_user_segmentvote));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_sentence_tagging));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_user_tagging));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_language_pronounce));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_language_word));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_word_wordflow));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_user_wordflow));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_wordflow_wordvote));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_user_wordvote));}).then(function(){
+				});
+			});
+			function openModel(model)
+			{	window.open("/code/bean.jsp?model="+model);
+				window.open("/code/mask.jsp?model="+model);
+				window.open("/code/mapper.jsp?model="+model);
+				window.open("/code/listener.jsp?model="+model);
+				window.open("/code/controller.jsp?model="+model);
+				window.open("/code/checkcontroller.jsp?model="+model);
+				window.open("/code/html.jsp?model="+model);
+				window.open("/code/js.jsp?model="+model);
+				window.open("/code/androidbean.jsp?model="+model);
+				window.open("/code/androidmask.jsp?model="+model);
+				window.open("/code/stub.jsp?model="+model);
+			};
+		</script>
+	</body>
+</html>
