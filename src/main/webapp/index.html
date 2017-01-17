@@ -11,29 +11,32 @@
 			<button onclick="openModel('user')">User</button>
 		</p>
 		<p>
+			<button onclick="openModel('usercreation')">Usercreation</button>
+		</p>
+		<p>
 			<button onclick="openModel('role')">Role</button>
 		</p>
 		<p>
-			<button onclick="openModel('userRole')">Userrole</button>
+			<button onclick="openModel('userrole')">Userrole</button>
 		</p>
 		<p>
 			<button onclick="openModel('authority')">Authority</button>
 		</p>
 		<p>
-			<button onclick="openModel('roleAuthority')">Roleauthority</button>
+			<button onclick="openModel('roleauthority')">Roleauthority</button>
 		</p>
 		<p>
 			<button onclick="openModel('language')">Language</button>
 		</p>
 		<p>
-			<button onclick="openModel('languageParameter')">Languageparameter</button>
+			<button onclick="openModel('languageparameter')">Languageparameter</button>
 			{id:"action",name:"操作",formatter:function(rawData){return rawData.lplsid;},decorator:function(cellData,rowId,rowIndex){return "<a target='view_window' href='../api/base/build?lang="+cellData+"'>重新編譯</a>";},width:"80px"}
 		</p>
 		<p>
 			<button onclick="openModel('chunk')">Chunk</button>
 		</p>
 		<p>
-			<button onclick="openModel('chunkCriteria')">Chunkcriteria</button>
+			<button onclick="openModel('chunkcriteria')">Chunkcriteria</button>
 		</p>
 		<p>
 			<button onclick="openModel('category')">Category</button>
@@ -87,7 +90,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'LanguageController','maskAlias':'LanguageMaskController','checkAlias':'LanguageCheckController','stub':'LanguageStub','base':'/api/base','path':'/api/language','path':'/api/language_mask','checkPath':'/api/language_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'LanguageController','attachmentAlias':'LanguageAttachmentController','checkAlias':'LanguageCheckController','stub':'LanguageStub','base':'/api/base','path':'/api/language','attachmentPath':'/api/language_attachment','checkPath':'/api/language_check',
+						'attachmentType':'txt',
 						'auth':{'name':'lang','individual':false},'mapperBean':'languageMapper','listenerBean':'languageListener'
 					},
 					'html':
@@ -105,7 +109,8 @@
 						[	{	'id':'uspswd','name':'密碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'password','length':'16'}},
 							{	'id':'usname','name':'昵稱','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'},
 							{	'id':'usst','name':'狀態','javaType':'Integer','dojoType':'dijit/form/Select','length':'1','in':[{'value':-1,'desc':'Disabled'},{'value':0,'desc':'Enabled'}],'default':0},
-							{	'id':'uslsid','name':'語言編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'}
+							{	'id':'uslsid','name':'語言編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'},
+							{	'id':'uspn','name':'單位能量','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'2'}//new
 						]
 					},
 					'mapper':
@@ -115,7 +120,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'UserController','maskAlias':'UserMaskController','checkAlias':'UserCheckController','stub':'UserStub','base':'/api/base','path':'/api/user','maskPath':'/api/user_mask','checkPath':'/api/user_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'UserController','attachmentAlias':'UserAttachmentController','checkAlias':'UserCheckController','stub':'UserStub','base':'/api/base','path':'/api/user','attachmentPath':'/api/user_attachment','checkPath':'/api/user_check',
+						'attachmentType':'txt',
 						'auth':{'name':'user','individual':true},'mapperBean':'userMapper','listenerBean':'userListener'
 					},
 					'html':
@@ -130,7 +136,37 @@
 					'foreignModel':'language',
 					'foreign':['lsid']
 				};
-				
+				var usercreation=
+				{	'bean':
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Usercreation','maskAlias':'UsercreationMask','listenerAlias':'UsercreationListener','name':'用戶創建','desc':['ucusid'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+						'key':
+						{	'id':'ucid','name':'創建編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
+						},
+						'field':
+						[	{	'id':'uccrdd','name':'創建日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'created'}},
+							{	'id':'uccrdt','name':'創建辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'created'}},
+							{	'id':'ucusid','name':'目標用戶名','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'owner'}},
+							{	'id':'ucpv','name':'圖片驗證碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'6'},
+							{	'id':'ucmv','name':'短信驗證碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'6'},
+							{	'id':'ucst','name':'狀態','javaType':'Integer','dojoType':'dijit/form/Select','length':'1','in':[{'value':-1,'desc':'Invalid'},{'value':0,'desc':'Initial'},{'value':1,'desc':'Waiting'},{'value':2,'desc':'Sent'},{'value':3,'desc':'Finalized'}],'default':0}
+						]
+					},
+					'mapper':
+					{	'package':'com.p8499.lang.mapper','alias':'UsercreationMapper','view':'public.F0309','table':'public.F0309',
+						'unique':[],
+						'referencing':[],
+						'referenced':[]
+					},
+					'controller':
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'UsercreationController','attachmentAlias':'UsercreationAttachmentController','checkAlias':'UsercreationCheckController','stub':'UsercreationStub','base':'/api/base','path':'/api/usercreation','attachmentPath':'/api/usercreation_attachment','checkPath':'/api/usercreation_check',
+						'attachmentType':'png',
+						'auth':{'name':'uscr','individual':true},'mapperBean':'usercreationMapper','listenerBean':'usercreationListener'
+					},
+					'html':
+					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_usercreation.html','js':'_part_usercreation.js',
+						'sort':[{'id':'uccrdd','order':'desc'},{'id':'uccrdt','order':'desc'},{'id':'ucusid','order':'asc'}]
+					}
+				};
 				var role=
 				{	'bean':
 					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Role','maskAlias':'RoleMask','listenerAlias':'RoleListener','name':'角色','desc':['rlname'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
@@ -148,7 +184,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'RoleController','maskAlias':'RoleMaskController','checkAlias':'RoleCheckController','stub':'RoleStub','base':'/api/base','path':'/api/role','maskPath':'/api/role_mask','checkPath':'/api/role_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'RoleController','attachmentAlias':'RoleAttachmentController','checkAlias':'RoleCheckController','stub':'RoleStub','base':'/api/base','path':'/api/role','attachmentPath':'/api/role_attachment','checkPath':'/api/role_check',
+						'attachmentType':'txt',
 						'auth':{'name':'role','individual':false},'mapperBean':'roleMapper','listenerBean':'roleListener'
 					},
 					'html':
@@ -156,7 +193,7 @@
 						'sort':[{'id':'rlid','order':'asc'}]
 					}
 				};
-				var userRole=
+				var userrole=
 				{	'bean':
 					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Userrole','maskAlias':'UserroleMask','listenerAlias':'UserroleListener','name':'用戶--角色','desc':['rlid','rlname'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
 						'key':
@@ -176,7 +213,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'UserroleController','maskAlias':'UserroleMaskController','checkAlias':'UserroleCheckController','stub':'UserroleStub','base':'/api/base','path':'/api/userrole','maskPath':'/api/userrole_mask','checkPath':'/api/userrole_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'UserroleController','attachmentAlias':'UserroleAttachmentController','checkAlias':'UserroleCheckController','stub':'UserroleStub','base':'/api/base','path':'/api/userrole','attachmentPath':'/api/userrole_attachment','checkPath':'/api/userrole_check',
+						'attachmentType':'txt',
 						'auth':{'name':'usrl','individual':false},'mapperBean':'userroleMapper','listenerBean':'userroleListener'
 					},
 					'html':
@@ -184,16 +222,16 @@
 						'sort':[{'id':'urusid','order':'asc'},{'id':'urrlid','order':'asc'}]
 					}
 				};
-				var rel_user_userRole=
-				{	'alias':'rel_user_userRole',
-					'domesticModel':'userRole',
+				var rel_user_userrole=
+				{	'alias':'rel_user_userrole',
+					'domesticModel':'userrole',
 					'domestic':['urusid'],
 					'foreignModel':'user',
 					'foreign':['usid']
 				};
-				var rel_role_userRole=
-				{	'alias':'rel_role_userRole',
-					'domesticModel':'userRole',
+				var rel_role_userrole=
+				{	'alias':'rel_role_userrole',
+					'domesticModel':'userrole',
 					'domestic':['urrlid'],
 					'foreignModel':'role',
 					'foreign':['rlid']
@@ -216,7 +254,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'AuthorityController','maskAlias':'AuthorityMaskController','checkAlias':'AuthorityCheckController','stub':'AuthorityStub','base':'/api/base','path':'/api/authority','maskPath':'/api/authority_mask','checkPath':'/api/authority_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'AuthorityController','attachmentAlias':'AuthorityAttachmentController','checkAlias':'AuthorityCheckController','stub':'AuthorityStub','base':'/api/base','path':'/api/authority','attachmentPath':'/api/authority_attachment','checkPath':'/api/authority_check',
+						'attachmentType':'txt',
 						'auth':{'name':'auth','individual':false},'mapperBean':'authorityMapper','listenerBean':'authorityListener'
 					},
 					'html':
@@ -224,7 +263,7 @@
 						'sort':[{'id':'augrp','order':'asc'},{'id':'auid','order':'asc'}]
 					}
 				};
-				var roleAuthority=
+				var roleauthority=
 				{	'bean':
 					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Roleauthority','maskAlias':'RoleauthorityMask','listenerAlias':'RoleauthorityListener','name':'角色--權限','desc':['rarlid','raauid'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
 						'key':
@@ -244,7 +283,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'RoleauthorityController','maskAlias':'RoleauthorityMaskController','checkAlias':'RoleauthorityCheckController','stub':'RoleauthorityStub','base':'/api/base','path':'/api/roleauthority','maskPath':'/api/roleauthority_mask','checkPath':'/api/roleauthority_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'RoleauthorityController','attachmentAlias':'RoleauthorityAttachmentController','checkAlias':'RoleauthorityCheckController','stub':'RoleauthorityStub','base':'/api/base','path':'/api/roleauthority','attachmentPath':'/api/roleauthority_attachment','checkPath':'/api/roleauthority_check',
+						'attachmentType':'txt',
 						'auth':{'name':'rlau','individual':false},'mapperBean':'roleauthorityMapper','listenerBean':'roleauthorityListener'
 					},
 					'html':
@@ -252,16 +292,16 @@
 						'sort':[{'id':'rarlid','order':'asc'},{'id':'raauid','order':'asc'}]
 					}
 				};
-				var rel_authority_roleAuthority=
-				{	'alias':'rel_authority_roleAuthority',
-					'domesticModel':'roleAuthority',
+				var rel_authority_roleauthority=
+				{	'alias':'rel_authority_roleauthority',
+					'domesticModel':'roleauthority',
 					'domestic':['raauid'],
 					'foreignModel':'authority',
 					'foreign':['auid']
 				};
-				var rel_role_roleAuthority=
-				{	'alias':'rel_role_roleAuthority',
-					'domesticModel':'roleAuthority',
+				var rel_role_roleauthority=
+				{	'alias':'rel_role_roleauthority',
+					'domesticModel':'roleauthority',
 					'domestic':['rarlid'],
 					'foreignModel':'role',
 					'foreign':['rlid']
@@ -287,7 +327,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'ChunkController','maskAlias':'ChunkMaskController','checkAlias':'ChunkCheckController','stub':'ChunkStub','base':'/api/base','path':'/api/chunk','maskPath':'/api/chunk_mask','checkPath':'/api/chunk_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'ChunkController','attachmentAlias':'ChunkAttachmentController','checkAlias':'ChunkCheckController','stub':'ChunkStub','base':'/api/base','path':'/api/chunk','attachmentPath':'/api/chunk_attachment','checkPath':'/api/chunk_check',
+						'attachmentType':'txt',
 						'auth':{'name':'chnk','individual':false},'mapperBean':'chunkMapper','listenerBean':'chunkListener'
 					},
 					'html':
@@ -302,9 +343,9 @@
 					'foreignModel':'language',
 					'foreign':['lsid']
 				};
-				var chunkCriteria=
+				var chunkcriteria=
 				{	'bean':
-					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Chunkcriteria','maskAlias':'ChunkcriteriaMask','listenerAlias':'ChunkcrieriaListener','name':'組合條件','desc':['cctk','cctg'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
+					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Chunkcriteria','maskAlias':'ChunkcriteriaMask','listenerAlias':'ChunkcriteriaListener','name':'組合條件','desc':['cctk','cctg'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
 						'key':
 						{	'id':'ccid','name':'條件編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','auto':true
 						},
@@ -322,7 +363,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'ChunkcriteriaController','maskAlias':'ChunkcriteriaMaskController','checkAlias':'ChunkcriteriaCheckController','stub':'ChunkcriteriaStub','base':'/api/base','path':'/api/chunkcriteria','maskPath':'/api/chunkcriteria_mask','checkPath':'/api/chunkcriteria_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'ChunkcriteriaController','attachmentAlias':'ChunkcriteriaAttachmentController','checkAlias':'ChunkcriteriaCheckController','stub':'ChunkcriteriaStub','base':'/api/base','path':'/api/chunkcriteria','attachmentPath':'/api/chunkcriteria_attachment','checkPath':'/api/chunkcriteria_check',
+						'attachmentType':'txt',
 						'auth':{'name':'ckct','individual':false},'mapperBean':'chunkcriteriaMapper','listenerBean':'chunkcriteriaListener'
 					},
 					'html':
@@ -330,14 +372,14 @@
 						'sort':[{'id':'cccpid','order':'asc'},{'id':'ccsi','order':'asc'}]
 					}
 				};
-				var rel_chunk_chunkCriteria=
-				{	'alias':'rel_chunk_chunkCriteria',
-					'domesticModel':'chunkCriteria',
+				var rel_chunk_chunkcriteria=
+				{	'alias':'rel_chunk_chunkcriteria',
+					'domesticModel':'chunkcriteria',
 					'domestic':['cccpid'],
 					'foreignModel':'chunk',
 					'foreign':['cpid']
 				};
-				var languageParameter=
+				var languageparameter=
 				{	'bean':
 					{	'package':'com.p8499.lang.bean','maskPackage':'com.p8499.lang.mask','listenerPackage':'com.p8499.lang.listener','alias':'Languageparameter','maskAlias':'LanguageparameterMask','listenerAlias':'LanguageparameterListener','name':'語言參數','desc':['lplsid'],'androidPackage':'com.p8499.lang.bean','androidMaskPackage':'com.p8499.lang.mask',
 						'key':
@@ -366,7 +408,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'LanguageparameterController','maskAlias':'LanguageparameterMaskController','checkAlias':'LanguageparameterCheckController','stub':'LanguageparameterStub','base':'/api/base','path':'/api/languageparameter','maskPath':'/api/languageparameter_mask','checkPath':'/api/languageparameter_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'LanguageparameterController','attachmentAlias':'LanguageparameterAttachmentController','checkAlias':'LanguageparameterCheckController','stub':'LanguageparameterStub','base':'/api/base','path':'/api/languageparameter','attachmentPath':'/api/languageparameter_attachment','checkPath':'/api/languageparameter_check',
+						'attachmentType':'txt',
 						'auth':{'name':'lang','individual':false},'mapperBean':'languageparameterMapper','listenerBean':'languageparameterListener'
 					},
 					'html':
@@ -374,9 +417,9 @@
 						'sort':[{'id':'lplsid','order':'asc'}]
 					}
 				};
-				var rel_language_languageParameter=
-				{	'alias':'rel_language_languageParameter',
-					'domesticModel':'languageParameter',
+				var rel_language_languageparameter=
+				{	'alias':'rel_language_languageparameter',
+					'domesticModel':'languageparameter',
 					'domestic':['lplsid'],
 					'foreignModel':'language',
 					'foreign':['lsid']
@@ -390,7 +433,7 @@
 						'field':
 						[	{	'id':'cglsid','name':'語言編碼','javaType':'String','dojoType':'dijit/form/TextBox','length':'16'},
 							{	'id':'cgsi','name':'子項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
-							{	'id':'cgpsi','name':'父項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
+							{	'id':'cgpsi','name':'父項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},//to avoid cross-language category, use cgpsi instead of cgpid here
 							{	'id':'cgname','name':'分類名稱','javaType':'String','dojoType':'dijit/form/TextBox','length':'32'}
 						]
 					},
@@ -403,7 +446,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'CategoryController','maskAlias':'CategoryMaskController','checkAlias':'CategoryCheckController','stub':'CategoryStub','base':'/api/base','path':'/api/category','maskPath':'/api/category_mask','checkPath':'/api/category_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'CategoryController','attachmentAlias':'CategoryAttachmentController','checkAlias':'CategoryCheckController','stub':'CategoryStub','base':'/api/base','path':'/api/category','attachmentPath':'/api/category_attachment','checkPath':'/api/category_check',
+						'attachmentType':'txt',
 						'auth':{'name':'cate','individual':false},'mapperBean':'categoryMapper','listenerBean':'categoryListener'
 					},
 					'html':
@@ -431,17 +475,19 @@
 							{	'id':'atusid','name':'擁有者','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'owner'}},
 							{	'id':'atupdd','name':'更新日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'updated'}},
 							{	'id':'atupdt','name':'更新辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'updated'}},
-							{	'id':'atcgname','name':':分類名稱','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'cache'}},
-							{	'id':'atcsa','name':':A類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'cache'}},
-							{	'id':'atcsb','name':':B類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'cache'}},
-							{	'id':'atcsc','name':':C類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'cache'}},
-							{	'id':'atcsd','name':':D類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'cache'}},
-							{	'id':'atcse','name':':E類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'cache'}},
-							{	'id':'atcsf','name':':F類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'cache'}}
+							{	'id':'atbrf','name':':摘要','javaType':'String','dojoType':'dijit/form/TextBox','length':'96','special':{'type':'virtual'}},
+							{	'id':'atcgname','name':':分類名稱','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'virtual'}},
+							{	'id':'atusname','name':':擁有者名','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'virtual'}},
+							{	'id':'atcsa','name':':A類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'virtual'}},
+							{	'id':'atcsb','name':':B類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'virtual'}},
+							{	'id':'atcsc','name':':C類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'virtual'}},
+							{	'id':'atcsd','name':':D類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'virtual'}},
+							{	'id':'atcse','name':':E類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'virtual'}},
+							{	'id':'atcsf','name':':F類','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4','special':{'type':'virtual'}}
 						]
 					},
 					'mapper':
-					{	'package':'com.p8499.lang.mapper','alias':'ArticleMapper','view':'public.F1110','table':'public.F1110',
+					{	'package':'com.p8499.lang.mapper','alias':'ArticleMapper','view':'public.V1110','table':'public.F1110',
 						'unique':
 						[	['atcgid','atsi']
 						],
@@ -449,7 +495,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'ArticleController','maskAlias':'ArticleMaskController','checkAlias':'ArticleCheckController','stub':'ArticleStub','base':'/api/base','path':'/api/article','maskPath':'/api/article_mask','checkPath':'/api/article_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'ArticleController','attachmentAlias':'ArticleAttachmentController','checkAlias':'ArticleCheckController','stub':'ArticleStub','base':'/api/base','path':'/api/article','attachmentPath':'/api/article_attachment','checkPath':'/api/article_check',
+						'attachmentType':'txt',
 						'auth':{'name':'artc','individual':true},'mapperBean':'articleMapper','listenerBean':'articleListener'
 					},
 					'html':
@@ -484,11 +531,12 @@
 							{	'id':'asst','name':'狀態','javaType':'Integer','dojoType':'dijit/form/Select','length':'1','in':[{'value':-1,'desc':'Disabled'},{'value':0,'desc':'Enabled'}],'default':0},
 							{	'id':'asusid','name':'擁有者','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'owner'}},
 							{	'id':'asupdd','name':'更新日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'updated'}},
-							{	'id':'asupdt','name':'更新辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'updated'}}
+							{	'id':'asupdt','name':'更新辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'updated'}},
+							{	'id':'ascs','name':':類','javaType':'String','dojoType':'dijit/form/TextBox','length':'1','special':{'type':'virtual'}}
 						]
 					},
 					'mapper':
-					{	'package':'com.p8499.lang.mapper','alias':'SentenceMapper','view':'public.F1120','table':'public.F1120',
+					{	'package':'com.p8499.lang.mapper','alias':'SentenceMapper','view':'public.V1120','table':'public.F1120',
 						'unique':
 						[	['asatid','assi']
 						],
@@ -496,7 +544,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'SentenceController','maskAlias':'SentenceMaskController','checkAlias':'SentenceCheckController','stub':'SentenceStub','base':'/api/base','path':'/api/sentence','maskPath':'/api/sentence_mask','checkPath':'/api/sentence_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'SentenceController','attachmentAlias':'SentenceAttachmentController','checkAlias':'SentenceCheckController','stub':'SentenceStub','base':'/api/base','path':'/api/sentence','attachmentPath':'/api/sentence_attachment','checkPath':'/api/sentence_check',
+						'attachmentType':'txt',
 						'auth':{'name':'sent','individual':true},'mapperBean':'sentenceMapper','listenerBean':'sentenceListener'
 					},
 					'html':
@@ -540,7 +589,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'SegmentController','maskAlias':'SegmentMaskController','checkAlias':'SegmentCheckController','stub':'SegmentStub','base':'/api/base','path':'/api/segment','maskPath':'/api/segment_mask','checkPath':'/api/segment_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'SegmentController','attachmentAlias':'SegmentAttachmentController','checkAlias':'SegmentCheckController','stub':'SegmentStub','base':'/api/base','path':'/api/segment','attachmentPath':'/api/segment_attachment','checkPath':'/api/segment_check',
+						'attachmentType':'txt',
 						'auth':{'name':'sgmt','individual':true},'mapperBean':'segmentMapper','listenerBean':'segmentListener'
 					},
 					'html':
@@ -551,9 +601,9 @@
 				var rel_sentence_segment=
 				{	'alias':'rel_sentence_segment',
 					'domesticModel':'segment',
-					'domestic':['trasid'],
+					'domestic':['trasid','trupdt'],//test
 					'foreignModel':'sentence',
-					'foreign':['asid']
+					'foreign':['asid','asupdt']//test
 				};
 				var rel_user_segment=
 				{	'alias':'rel_user_segment',
@@ -573,7 +623,7 @@
 							{	'id':'tasi','name':'子項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','special':{'type':'next','scope':['taasid'],'step':1}},
 							{	'id':'tapi','name':'拼音聲調','javaType':'String','dojoType':'dijit/form/Textarea','length':'1024'},
 						 	{	'id':'tahz','name':'漢字','javaType':'String','dojoType':'dijit/form/Textarea','length':'128'},
-							{	'id':'tast','name':'狀態','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'1','in':[{'value':1,'desc':'Voting'},{'value':2,'desc':'Passed'},{'value':3,'desc':'Denied'}],'default':1},
+							{	'id':'tast','name':'狀態','javaType':'Integer','dojoType':'dijit/form/Select','length':'1','in':[{'value':1,'desc':'Voting'},{'value':2,'desc':'Passed'},{'value':3,'desc':'Denied'},{'value':4,'desc':'Recalled'}],'default':1},
 							{	'id':'tausid','name':'擁有者','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'owner'}},
 							{	'id':'tacrdd','name':'創建日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'created'}},
 							{	'id':'tacrdt','name':'創建辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'created'}},
@@ -590,8 +640,9 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'SegmentflowController','maskAlias':'SegmentflowMaskController','checkAlias':'SegmentflowCheckController','stub':'SegmentflowStub','base':'/api/base','path':'/api/segmentflow','maskPath':'/api/segmentflow_mask','checkPath':'/api/segmentflow_check',
-						'auth':{'name':'sgfl','individual':true},'mapperBean':'SegmentflowMapper','listenerBean':'segmentflowListener'
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'SegmentflowController','attachmentAlias':'SegmentflowAttachmentController','checkAlias':'SegmentflowCheckController','stub':'SegmentflowStub','base':'/api/base','path':'/api/segmentflow','attachmentPath':'/api/segmentflow_attachment','checkPath':'/api/segmentflow_check',
+						'attachmentType':'txt',
+						'auth':{'name':'sgfl','individual':true},'mapperBean':'segmentflowMapper','listenerBean':'segmentflowListener'
 					},
 					'html':
 					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_segmentflow.html','js':'_part_segmentflow.js',
@@ -622,9 +673,9 @@
 						[	{	'id':'tvtaid','name':'線程編碼','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8'},
 							{	'id':'tvsi','name':'子項號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'8','special':{'type':'next','scope':['tvtaid'],'step':1}},
 							{	'id':'tvusid','name':'擁有者','javaType':'String','dojoType':'dijit/form/TextBox','length':'32','special':{'type':'owner'}},
-							{	'id':'tvpo','name':'能量','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'2'},
-							{	'id':'taupdd','name':'更新日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'updated'}},
-							{	'id':'taupdt','name':'更新辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'updated'}}
+							{	'id':'tvpo','name':'能量','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'2','in':[{'value':-1,'desc':'Negative'},{'value':1,'desc':'Positive'}]},//+1 or -1
+							{	'id':'tvupdd','name':'更新日腳','javaType':'String','dojoType':'dijit/form/DateTextBox','length':'10','special':{'type':'updated'}},
+							{	'id':'tvupdt','name':'更新辰光','javaType':'String','dojoType':'dijit/form/TimeTextBox','length':'8','special':{'type':'updated'}}
 						]
 					},
 					'mapper':
@@ -637,8 +688,9 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'SegmentvoteController','maskAlias':'SegmentvoteMaskController','checkAlias':'SegmentvoteCheckController','stub':'SegmentvoteStub','base':'/api/base','path':'/api/segmentvote','maskPath':'/api/segmentvote_mask','checkPath':'/api/segmentvote_check',
-						'auth':{'name':'sgvt','individual':true},'mapperBean':'SegmentvoteMapper','listenerBean':'segmentvoteListener'
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'SegmentvoteController','attachmentAlias':'SegmentvoteAttachmentController','checkAlias':'SegmentvoteCheckController','stub':'SegmentvoteStub','base':'/api/base','path':'/api/segmentvote','attachmentPath':'/api/segmentvote_attachment','checkPath':'/api/segmentvote_check',
+						'attachmentType':'txt',
+						'auth':{'name':'sgvt','individual':true},'mapperBean':'segmentvoteMapper','listenerBean':'segmentvoteListener'
 					},
 					'html':
 					{	'controllerBase':'../language','dojoBase':'../libdojo','css':'_part.css','html':'_part_segmentvote.html','js':'_part_segmentvote.js',
@@ -680,7 +732,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'TaggingController','maskAlias':'TaggingMaskController','checkAlias':'TaggingCheckController','stub':'TaggingStub','base':'/api/base','path':'/api/tagging','maskPath':'/api/tagging_mask','checkPath':'/api/tagging_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'TaggingController','attachmentAlias':'TaggingAttachmentController','checkAlias':'TaggingCheckController','stub':'TaggingStub','base':'/api/base','path':'/api/tagging','attachmentPath':'/api/tagging_attachment','checkPath':'/api/tagging_check',
+						'attachmentType':'txt',
 						'auth':{'name':'post','individual':true},'mapperBean':'taggingMapper','listenerBean':'taggingListener'
 					},
 					'html':
@@ -726,7 +779,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'PronounceController','maskAlias':'PronounceMaskController','checkAlias':'PronounceCheckController','stub':'PronounceStub','base':'/api/base','path':'/api/pronounce','maskPath':'/api/pronounce_mask','checkPath':'/api/pronounce_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'PronounceController','attachmentAlias':'PronounceAttachmentController','checkAlias':'PronounceCheckController','stub':'PronounceStub','base':'/api/base','path':'/api/pronounce','attachmentPath':'/api/pronounce_attachment','checkPath':'/api/pronounce_check',
+						'attachmentType':'txt',
 						'auth':{'name':'pron','individual':false},'mapperBean':'pronounceMapper','listenerBean':'pronounceListener'
 					},
 					'html':
@@ -752,6 +806,7 @@
 							{	'id':'woct','name':'字','javaType':'String','dojoType':'dijit/form/TextBox','length':'8'},
 							{	'id':'wopt','name':'拼音聲調','javaType':'String','dojoType':'dijit/form/TextBox','length':'64'},
 							{	'id':'wocl','name':'類別','javaType':'String','dojoType':'dijit/form/TextBox','length':'4'},
+							{	'id':'wosort','name':'排序號','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'4'},
 							{	'id':'wost','name':'狀態','javaType':'Integer','dojoType':'dijit/form/NumberTextBox','length':'1','in':[{'value':-1,'desc':'Disabled'},{'value':0,'desc':'Enabled'}],'default':0},
 						]
 					},
@@ -764,7 +819,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'WordController','maskAlias':'WordMaskController','checkAlias':'WordCheckController','stub':'WordStub','base':'/api/base','path':'/api/word','maskPath':'/api/word_mask','checkPath':'/api/word_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'WordController','attachmentAlias':'WordAttachmentController','checkAlias':'WordCheckController','stub':'WordStub','base':'/api/base','path':'/api/word','attachmentPath':'/api/word_attachment','checkPath':'/api/word_check',
+						'attachmentType':'txt',
 						'auth':{'name':'word','individual':false},'mapperBean':'wordMapper','listenerBean':'wordListener'
 					},
 					'html':
@@ -806,7 +862,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'WordflowController','maskAlias':'WordflowMaskController','checkAlias':'WordflowCheckController','stub':'WordflowStub','base':'/api/base','path':'/api/wordflow','maskPath':'/api/wordflow_mask','checkPath':'/api/wordflow_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'WordflowController','attachmentAlias':'WordflowAttachmentController','checkAlias':'WordflowCheckController','stub':'WordflowStub','base':'/api/base','path':'/api/wordflow','attachmentPath':'/api/wordflow_attachment','checkPath':'/api/wordflow_check',
+						'attachmentType':'txt',
 						'auth':{'name':'wdfl','individual':true},'mapperBean':'wordflowMapper','listenerBean':'wordflowListener'
 					},
 					'html':
@@ -853,7 +910,8 @@
 						'referenced':[]
 					},
 					'controller':
-					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'WordvoteController','maskAlias':'WordvoteMaskController','checkAlias':'WordvoteCheckController','stub':'WordvoteStub','base':'/api/base','path':'/api/wordvote','maskPath':'/api/wordvote_mask','checkPath':'/api/wordvote_check',
+					{	'package':'com.p8499.lang.controller','androidPackage':'com.p8499.lang.stub','alias':'WordvoteController','attachmentAlias':'WordvoteAttachmentController','checkAlias':'WordvoteCheckController','stub':'WordvoteStub','base':'/api/base','path':'/api/wordvote','attachmentPath':'/api/wordvote_attachment','checkPath':'/api/wordvote_check',
+						'attachmentType':'txt',
 						'auth':{'name':'wdvt','individual':true},'mapperBean':'wordvoteMapper','listenerBean':'wordvoteListener'
 					},
 					'html':
@@ -880,33 +938,33 @@
 				xhr("/code/clr.jsp").then(function(){
 				xhr("/code/add.jsp?name=language&model="+json.stringify(language));}).then(function(){
 				xhr("/code/add.jsp?name=user&model="+json.stringify(user));}).then(function(){
+				xhr("/code/add.jsp?name=usercreation&model="+json.stringify(usercreation));}).then(function(){
 				xhr("/code/add.jsp?name=role&model="+json.stringify(role));}).then(function(){
-				xhr("/code/add.jsp?name=user&model="+json.stringify(user));}).then(function(){
-				xhr("/code/add.jsp?name=userRole&model="+json.stringify(userRole));}).then(function(){
+				xhr("/code/add.jsp?name=userrole&model="+json.stringify(userrole));}).then(function(){
 				xhr("/code/add.jsp?name=authority&model="+json.stringify(authority));}).then(function(){
-				xhr("/code/add.jsp?name=roleAuthority&model="+json.stringify(roleAuthority));}).then(function(){
+				xhr("/code/add.jsp?name=roleauthority&model="+json.stringify(roleauthority));}).then(function(){
 				xhr("/code/add.jsp?name=chunk&model="+json.stringify(chunk));}).then(function(){
-				xhr("/code/add.jsp?name=chunkCriteria&model="+json.stringify(chunkCriteria));}).then(function(){
+				xhr("/code/add.jsp?name=chunkcriteria&model="+json.stringify(chunkcriteria));}).then(function(){
 				xhr("/code/add.jsp?name=category&model="+json.stringify(category));}).then(function(){
 				xhr("/code/add.jsp?name=article&model="+json.stringify(article));}).then(function(){
 				xhr("/code/add.jsp?name=sentence&model="+json.stringify(sentence));}).then(function(){
 				xhr("/code/add.jsp?name=segment&model="+json.stringify(segment));}).then(function(){
 				xhr("/code/add.jsp?name=segmentflow&model="+json.stringify(segmentflow));}).then(function(){
 				xhr("/code/add.jsp?name=segmentvote&model="+json.stringify(segmentvote));}).then(function(){
-				xhr("/code/add.jsp?name=languageParameter&model="+json.stringify(languageParameter));}).then(function(){
+				xhr("/code/add.jsp?name=languageparameter&model="+json.stringify(languageparameter));}).then(function(){
 				xhr("/code/add.jsp?name=tagging&model="+json.stringify(tagging));}).then(function(){
 				xhr("/code/add.jsp?name=pronounce&model="+json.stringify(pronounce));}).then(function(){
 				xhr("/code/add.jsp?name=word&model="+json.stringify(word));}).then(function(){
 				xhr("/code/add.jsp?name=wordflow&model="+json.stringify(wordflow));}).then(function(){
 				xhr("/code/add.jsp?name=wordvote&model="+json.stringify(wordvote));}).then(function(){
 				xhr("/code/rel.jsp?relation="+json.stringify(rel_language_user));}).then(function(){
-				xhr("/code/rel.jsp?relation="+json.stringify(rel_user_userRole));}).then(function(){
-				xhr("/code/rel.jsp?relation="+json.stringify(rel_role_userRole));}).then(function(){
-				xhr("/code/rel.jsp?relation="+json.stringify(rel_authority_roleAuthority));}).then(function(){
-				xhr("/code/rel.jsp?relation="+json.stringify(rel_role_roleAuthority));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_user_userrole));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_role_userrole));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_authority_roleauthority));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_role_roleauthority));}).then(function(){
 				xhr("/code/rel.jsp?relation="+json.stringify(rel_language_chunk));}).then(function(){
-				xhr("/code/rel.jsp?relation="+json.stringify(rel_chunk_chunkCriteria));}).then(function(){
-				xhr("/code/rel.jsp?relation="+json.stringify(rel_language_languageParameter));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_chunk_chunkcriteria));}).then(function(){
+				xhr("/code/rel.jsp?relation="+json.stringify(rel_language_languageparameter));}).then(function(){
 				xhr("/code/rel.jsp?relation="+json.stringify(rel_language_category));}).then(function(){
 				xhr("/code/rel.jsp?relation="+json.stringify(rel_category_article));}).then(function(){
 				xhr("/code/rel.jsp?relation="+json.stringify(rel_user_article));}).then(function(){
@@ -934,6 +992,7 @@
 				window.open("/code/mapper.jsp?model="+model);
 				window.open("/code/listener.jsp?model="+model);
 				window.open("/code/controller.jsp?model="+model);
+				window.open("/code/attachmentcontroller.jsp?model="+model);
 				window.open("/code/checkcontroller.jsp?model="+model);
 				window.open("/code/html.jsp?model="+model);
 				window.open("/code/js.jsp?model="+model);
